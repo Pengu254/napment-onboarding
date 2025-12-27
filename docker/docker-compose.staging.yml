@@ -1,0 +1,77 @@
+version: '3.8'
+
+# =============================================================================
+# NAPMENT ONBOARDING - STAGING STACK
+# =============================================================================
+# Staging deployment for testing before production
+# URLs:
+#   - Frontend: staging-onboarding.bobbi.live
+#   - Backend:  staging-onboarding-api.bobbi.live
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # FRONTEND STAGING
+  # ===========================================================================
+  frontend-staging:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://staging-onboarding-api.${DOMAIN}
+    container_name: onboarding-frontend-staging
+    restart: unless-stopped
+    depends_on:
+      - backend-staging
+    networks:
+      - onboarding-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.onboarding-frontend-staging.rule=Host(`staging-onboarding.${DOMAIN}`)"
+      - "traefik.http.routers.onboarding-frontend-staging.entrypoints=websecure"
+      - "traefik.http.routers.onboarding-frontend-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.services.onboarding-frontend-staging.loadbalancer.server.port=3001"
+      # No-index for search engines
+      - "traefik.http.middlewares.staging-noindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow"
+      - "traefik.http.routers.onboarding-frontend-staging.middlewares=staging-noindex"
+
+  # ===========================================================================
+  # BACKEND STAGING
+  # ===========================================================================
+  backend-staging:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: onboarding-backend-staging
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=staging
+      - DEBUG=true
+      - SECRET_KEY=${SECRET_KEY}
+      - CORS_ORIGINS=https://staging-onboarding.${DOMAIN}
+      - SHOPIFY_CLIENT_ID=${SHOPIFY_CLIENT_ID}
+      - SHOPIFY_CLIENT_SECRET=${SHOPIFY_CLIENT_SECRET}
+      - NAPMENT_API_URL=${NAPMENT_API_URL}
+      - NAPMENT_API_KEY=${NAPMENT_API_KEY}
+    networks:
+      - onboarding-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.onboarding-backend-staging.rule=Host(`staging-onboarding-api.${DOMAIN}`)"
+      - "traefik.http.routers.onboarding-backend-staging.entrypoints=websecure"
+      - "traefik.http.routers.onboarding-backend-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.services.onboarding-backend-staging.loadbalancer.server.port=8001"
+      # CORS
+      - "traefik.http.middlewares.onboarding-staging-cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
+      - "traefik.http.middlewares.onboarding-staging-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.onboarding-staging-cors.headers.accesscontrolalloworiginlist=https://staging-onboarding.${DOMAIN}"
+      - "traefik.http.routers.onboarding-backend-staging.middlewares=onboarding-staging-cors"
+
+# =============================================================================
+# NETWORKS - Uses shared network with production Traefik
+# =============================================================================
+networks:
+  onboarding-network:
+    external: true
+    name: onboarding-network
+

@@ -1,0 +1,59 @@
+version: '3.8'
+
+# =============================================================================
+# NAPMENT ONBOARDING - DEVELOPMENT STACK
+# =============================================================================
+# Local development with hot reload
+# URLs:
+#   - Frontend: http://localhost:3001
+#   - Backend:  http://localhost:8001
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # FRONTEND DEV - with hot reload
+  # ===========================================================================
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      target: builder  # Stop at builder stage for dev
+    container_name: onboarding-frontend-dev
+    volumes:
+      - ../frontend/src:/app/src:ro
+      - ../frontend/public:/app/public:ro
+    ports:
+      - "3001:3001"
+    environment:
+      - VITE_API_URL=http://localhost:8001
+    command: npm run dev -- --host 0.0.0.0
+    networks:
+      - onboarding-dev
+
+  # ===========================================================================
+  # BACKEND DEV - with auto-reload
+  # ===========================================================================
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: onboarding-backend-dev
+    volumes:
+      - ../backend/src:/app/src:ro
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - CORS_ORIGINS=http://localhost:3001,http://127.0.0.1:3001
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload
+    networks:
+      - onboarding-dev
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  onboarding-dev:
+    driver: bridge
+
