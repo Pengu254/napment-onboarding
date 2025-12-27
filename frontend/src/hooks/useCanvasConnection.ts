@@ -11,20 +11,27 @@ const getDefaultWsUrl = (): string => {
   if (typeof window !== 'undefined') {
     const { protocol, hostname } = window.location;
     
+    console.log('[Canvas] Detecting WS URL:', { protocol, hostname });
+    
     // Production: onboarding.bobbi.live -> wss://onboarding-api.bobbi.live/ws
     if (protocol === 'https:') {
       const apiHost = hostname.replace('onboarding.', 'onboarding-api.');
-      return `wss://${apiHost}/ws`;
+      const wsUrl = `wss://${apiHost}/ws`;
+      console.log('[Canvas] Using production WS:', wsUrl);
+      return wsUrl;
     }
     
     // Staging or other HTTPS domains
     if (hostname.includes('.bobbi.live')) {
       const apiHost = hostname.replace('onboarding.', 'onboarding-api.');
-      return `wss://${apiHost}/ws`;
+      const wsUrl = `wss://${apiHost}/ws`;
+      console.log('[Canvas] Using staging WS:', wsUrl);
+      return wsUrl;
     }
   }
   
   // Local development fallback
+  console.log('[Canvas] Using local WS: ws://localhost:3001');
   return 'ws://localhost:3001';
 };
 

@@ -56,7 +56,7 @@ export function LandingPage() {
 
       {/* Right side - Onboarding Canvas */}
       <section className={styles.canvasSection}>
-        <OnboardingCanvas wsUrl="ws://localhost:3001" />
+        <OnboardingCanvas />
       </section>
     </div>
   );
