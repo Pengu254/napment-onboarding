@@ -5,17 +5,26 @@ interface UseCanvasConnectionOptions {
   wsUrl?: string;
 }
 
-// Get WebSocket URL from environment or default
-const getDefaultWsUrl = () => {
-  // In production, use secure WebSocket
-  if (import.meta.env.VITE_WS_URL) {
-    return import.meta.env.VITE_WS_URL;
+// Get WebSocket URL based on current environment
+const getDefaultWsUrl = (): string => {
+  // Runtime detection - check if we're in production (HTTPS)
+  if (typeof window !== 'undefined') {
+    const { protocol, hostname } = window.location;
+    
+    // Production: onboarding.bobbi.live -> wss://onboarding-api.bobbi.live/ws
+    if (protocol === 'https:') {
+      const apiHost = hostname.replace('onboarding.', 'onboarding-api.');
+      return `wss://${apiHost}/ws`;
+    }
+    
+    // Staging or other HTTPS domains
+    if (hostname.includes('.bobbi.live')) {
+      const apiHost = hostname.replace('onboarding.', 'onboarding-api.');
+      return `wss://${apiHost}/ws`;
+    }
   }
-  // Check if we're on HTTPS (production)
-  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-    return `wss://${window.location.hostname.replace('onboarding.', 'onboarding-api.')}/ws`;
-  }
-  // Local development
+  
+  // Local development fallback
   return 'ws://localhost:3001';
 };
 
