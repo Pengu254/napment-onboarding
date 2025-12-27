@@ -4,6 +4,7 @@ Application configuration using Pydantic Settings.
 
 from typing import List
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from functools import lru_cache
 
 
@@ -19,13 +20,15 @@ class Settings(BaseSettings):
     API_PORT: int = 8001
     SECRET_KEY: str = "change-me-in-production"
     
-    # CORS
-    CORS_ORIGINS: List[str] = [
-        "http://localhost:3001",
-        "http://localhost:5173",
-        "http://127.0.0.1:3001",
-        "http://127.0.0.1:5173",
-    ]
+    # CORS - accepts comma-separated string or list
+    CORS_ORIGINS: str = "http://localhost:3001,http://localhost:5173"
+    
+    @property
+    def cors_origins_list(self) -> List[str]:
+        """Parse CORS_ORIGINS as list."""
+        if isinstance(self.CORS_ORIGINS, list):
+            return self.CORS_ORIGINS
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
     
     # Database (optional - can use in-memory for simple setups)
     DATABASE_URL: str = ""

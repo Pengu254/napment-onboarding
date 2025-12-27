@@ -1,74 +1,25 @@
-version: '3.8'
-
-# =============================================================================
-# NAPMENT ONBOARDING - PRODUCTION STACK
-# =============================================================================
-# Production deployment for Napment Onboarding
-# URLs:
-#   - Frontend: onboarding.bobbi.live
-#   - Backend:  onboarding-api.bobbi.live
-# =============================================================================
+version: "3.8"
 
 services:
-  # ===========================================================================
-  # TRAEFIK - Reverse Proxy & SSL (shared with main stack)
-  # ===========================================================================
-  traefik:
-    image: traefik:v2.11
-    container_name: onboarding-traefik
-    restart: unless-stopped
-    command:
-      - "--api.dashboard=true"
-      - "--api.insecure=false"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=onboarding-network"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--log.level=INFO"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "letsencrypt:/letsencrypt"
-    networks:
-      - onboarding-network
-
-  # ===========================================================================
-  # FRONTEND - React/Vite SPA
-  # ===========================================================================
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=https://onboarding-api.${DOMAIN}
+        - VITE_API_URL=https://onboarding-api.bobbi.live
     container_name: onboarding-frontend
     restart: unless-stopped
     depends_on:
       - backend
     networks:
-      - onboarding-network
+      - napment-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.onboarding-frontend.rule=Host(`onboarding.${DOMAIN}`)"
+      - "traefik.http.routers.onboarding-frontend.rule=Host(`onboarding.bobbi.live`)"
       - "traefik.http.routers.onboarding-frontend.entrypoints=websecure"
       - "traefik.http.routers.onboarding-frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.onboarding-frontend.loadbalancer.server.port=3001"
-      # Security headers
-      - "traefik.http.middlewares.onboarding-headers.headers.stsSeconds=31536000"
-      - "traefik.http.middlewares.onboarding-headers.headers.stsIncludeSubdomains=true"
-      - "traefik.http.routers.onboarding-frontend.middlewares=onboarding-headers"
 
-  # ===========================================================================
-  # BACKEND - Python/FastAPI
-  # ===========================================================================
   backend:
     build:
       context: ../backend
@@ -78,43 +29,17 @@ services:
     environment:
       - ENVIRONMENT=production
       - SECRET_KEY=${SECRET_KEY}
-      - CORS_ORIGINS=https://onboarding.${DOMAIN}
-      - SHOPIFY_CLIENT_ID=${SHOPIFY_CLIENT_ID}
-      - SHOPIFY_CLIENT_SECRET=${SHOPIFY_CLIENT_SECRET}
-      - NAPMENT_API_URL=${NAPMENT_API_URL}
-      - NAPMENT_API_KEY=${NAPMENT_API_KEY}
+      - CORS_ORIGINS=https://onboarding.bobbi.live
     networks:
-      - onboarding-network
+      - napment-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.onboarding-backend.rule=Host(`onboarding-api.${DOMAIN}`)"
+      - "traefik.http.routers.onboarding-backend.rule=Host(`onboarding-api.bobbi.live`)"
       - "traefik.http.routers.onboarding-backend.entrypoints=websecure"
       - "traefik.http.routers.onboarding-backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.onboarding-backend.loadbalancer.server.port=8001"
-      # CORS
-      - "traefik.http.middlewares.onboarding-cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
-      - "traefik.http.middlewares.onboarding-cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.onboarding-cors.headers.accesscontrolalloworiginlist=https://onboarding.${DOMAIN}"
-      - "traefik.http.routers.onboarding-backend.middlewares=onboarding-cors"
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
 
-# =============================================================================
-# NETWORKS
-# =============================================================================
 networks:
-  onboarding-network:
-    name: onboarding-network
-    driver: bridge
-
-# =============================================================================
-# VOLUMES
-# =============================================================================
-volumes:
-  letsencrypt:
-    name: onboarding-letsencrypt
-
+  napment-network:
+    external: true
+    name: napment-network
