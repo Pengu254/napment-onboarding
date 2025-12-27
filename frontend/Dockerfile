@@ -1,4 +1,4 @@
-# Napment Onboarding Frontend
+# Napment Onboarding Frontend - Generative UI
 # Multi-stage Docker build
 
 # ============================================================================
@@ -18,7 +18,9 @@ RUN npm ci
 COPY . .
 
 # Build arguments for environment
+ARG VITE_WS_URL=wss://onboarding-api.bobbi.live/ws
 ARG VITE_API_URL=https://onboarding-api.bobbi.live
+ENV VITE_WS_URL=$VITE_WS_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 # Build application

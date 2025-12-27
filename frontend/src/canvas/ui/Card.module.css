@@ -1,0 +1,45 @@
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.sm {
+  max-width: 360px;
+  padding: var(--space-4);
+}
+
+.md {
+  max-width: 440px;
+  padding: var(--space-5);
+}
+
+.lg {
+  max-width: 520px;
+  padding: var(--space-6);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: var(--space-4) 0;
+}
+
+.spacer {
+  flex: 1;
+}
+

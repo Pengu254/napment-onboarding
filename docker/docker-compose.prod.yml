@@ -4,6 +4,7 @@ services:
       context: ../frontend
       dockerfile: Dockerfile
       args:
+        - VITE_WS_URL=wss://onboarding-api.bobbi.live/ws
         - VITE_API_URL=https://onboarding-api.bobbi.live
     container_name: onboarding-frontend
     restart: unless-stopped
@@ -25,9 +26,15 @@ services:
     container_name: onboarding-backend
     restart: unless-stopped
     environment:
-      - ENVIRONMENT=production
-      - SECRET_KEY=${SECRET_KEY:-default-secret-key}
-      - CORS_ORIGINS=https://onboarding.bobbi.live
+      - PORT=8001
+      - FRONTEND_URL=https://onboarding.bobbi.live
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      # Shopify OAuth
+      - SHOPIFY_CLIENT_ID=${SHOPIFY_CLIENT_ID}
+      - SHOPIFY_CLIENT_SECRET=${SHOPIFY_CLIENT_SECRET}
+      - OAUTH_CALLBACK_URL=https://onboarding-api.bobbi.live/auth/shopify/callback
     networks:
       - napment-network
     labels:

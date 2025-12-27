@@ -1,0 +1,49 @@
+.message {
+  max-width: 600px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.message p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.greeting {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
+}
+
+.greeting p {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.question {
+  font-size: 24px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.response {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.celebration {
+  font-size: 28px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.celebration p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
