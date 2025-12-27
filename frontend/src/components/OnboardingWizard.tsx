@@ -4,7 +4,6 @@
  * Orchestrates the multi-step onboarding flow
  */
 
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useOnboardingStore } from '../stores/onboardingStore';
 

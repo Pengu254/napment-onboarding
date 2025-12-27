@@ -2,15 +2,14 @@
  * Button Component
  */
 
-import React from 'react';
-import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { ReactNode, ButtonHTMLAttributes } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   iconPosition?: 'left' | 'right';
 }
 
@@ -40,8 +39,7 @@ export function Button({
   };
   
   return (
-    <motion.button
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
+    <button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className} ${
         (disabled || isLoading) ? 'opacity-50 cursor-not-allowed' : ''
       }`}
@@ -57,7 +55,6 @@ export function Button({
           {icon && iconPosition === 'right' && icon}
         </>
       )}
-    </motion.button>
+    </button>
   );
 }
-

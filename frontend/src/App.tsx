@@ -4,7 +4,6 @@
  * Wizard-style onboarding flow for merchants
  */
 
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { OnboardingWizard } from './components/OnboardingWizard';
 

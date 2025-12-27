@@ -2,7 +2,7 @@
  * Brand Configuration Step
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Palette } from 'lucide-react';
 import { Button } from '../ui/Button';

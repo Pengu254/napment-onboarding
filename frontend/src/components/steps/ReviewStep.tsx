@@ -2,7 +2,7 @@
  * Review Step - Summary before deployment
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Rocket, Check, Store, Palette, Bot, Globe } from 'lucide-react';
 import { Button } from '../ui/Button';

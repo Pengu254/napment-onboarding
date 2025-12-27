@@ -2,7 +2,6 @@
  * Progress Bar Component
  */
 
-import React from 'react';
 import { motion } from 'framer-motion';
 
 interface ProgressBarProps {

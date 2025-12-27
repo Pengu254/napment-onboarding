@@ -2,7 +2,7 @@
  * Platform Connect Step - OAuth connection
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/Button';

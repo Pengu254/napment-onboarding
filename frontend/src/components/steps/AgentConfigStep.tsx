@@ -2,7 +2,7 @@
  * Agent Configuration Step
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Bot, MessageCircle } from 'lucide-react';
 import { Button } from '../ui/Button';

@@ -2,7 +2,6 @@
  * Platform Selection Step
  */
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, ShoppingBag, Globe, Code } from 'lucide-react';
 import { Button } from '../ui/Button';

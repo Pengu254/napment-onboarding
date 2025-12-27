@@ -124,13 +124,16 @@ body::before {
 /* Cards */
 .card {
   @apply bg-surface-800/50 backdrop-blur-sm rounded-2xl border border-white/5;
-  @apply shadow-card;
+  box-shadow: var(--shadow-card);
 }
 
 .card-hover {
   @apply transition-all duration-300;
-  @apply hover:border-primary-500/30 hover:shadow-glow;
-  @apply hover:translate-y-[-2px];
+  @apply hover:border-primary-500/30 hover:translate-y-[-2px];
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-glow);
 }
 
 /* Inputs */

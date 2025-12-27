@@ -2,7 +2,7 @@
  * Complete Step - Success celebration
  */
 
-import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { PartyPopper, ExternalLink, Copy, Check, BookOpen, Headphones } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -10,7 +10,7 @@ import { useOnboardingStore } from '../../stores/onboardingStore';
 
 export function CompleteStep() {
   const { shopDomain, shopName, reset } = useOnboardingStore();
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
   
   const storefrontUrl = `https://${shopDomain?.replace('.myshopify.com', '')}.bobbi.live`;
   const adminUrl = 'https://admin.bobbi.live';

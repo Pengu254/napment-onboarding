@@ -2,7 +2,6 @@
  * Welcome Step - First step of onboarding
  */
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, Zap, Shield } from 'lucide-react';
 import { Button } from '../ui/Button';
